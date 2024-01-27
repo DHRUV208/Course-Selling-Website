@@ -5,12 +5,13 @@ import { useNavigate } from "react-router-dom";
 function AppBar() {
   const navigate = useNavigate();
 const [useremail, setUseremail] = useState(null);
+const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     function cb2(data) {
         if(data.username){
              setUseremail(data.username);
-
+            setIsLoading(false)
         }
       // return data;
       console.log(data);
@@ -27,6 +28,7 @@ const [useremail, setUseremail] = useState(null);
       },
     }).then(cb);
   }, []);
+  if(useremail){
   return (
     <div
       style={{
@@ -50,7 +52,7 @@ const [useremail, setUseremail] = useState(null);
               // window.location ="/register"
             }}
           >
-            Register
+            {useremail}
           </Button>
         </div>
         <div>
@@ -61,12 +63,15 @@ const [useremail, setUseremail] = useState(null);
               // window.loaction = "/login"
             }}
           >
-            Login
+            Logout
           </Button>
         </div>
       </div>
     </div>
   );
+} else {
+    
+}
 }
 
 export default AppBar;

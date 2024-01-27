@@ -1,14 +1,14 @@
 import { Button, Card, TextField } from "@mui/material";
 import { useState } from "react";
 
-function AddCourse() {
-
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState('');
+export function AddCourse() {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
 
   return (
-    <div style={{display: "flex", justifyContent: "center"}}>
-      <Card variant="outlined" style={{width: "400", padding: 20}}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Card variant="outlined" style={{ width: "400", padding: 20 }}>
         <TextField
           onChange={(e) => {
             setTitle(e.target.value);
@@ -27,11 +27,20 @@ function AddCourse() {
           variant="outlined"
         ></TextField>
 
+        <TextField
+          onChange={(e) => {
+            setImage(e.target.value);
+          }}
+          fullWidth
+          lable="Image Link"
+          variant="outlined"
+        ></TextField>
+
         <Button
           variant="contained"
           onClick={() => {
             function cb2(data) {
-              localStorage.setItem("token", data.token);
+              alert("course added");
               console.log(data);
             }
 
@@ -42,11 +51,12 @@ function AddCourse() {
               method: "POST",
               body: JSON.stringify({
                 title,
-                description
+                description,
+                imageLink: image,
               }),
               headers: {
                 "Content-type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("token")
+                Authorization: "Bearer " + localStorage.getItem("token"),
               },
             }).then(cb);
           }}
