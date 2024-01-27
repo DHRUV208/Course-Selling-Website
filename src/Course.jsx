@@ -1,12 +1,14 @@
-import { Button, Card, CircularProgress, TextField } from "@mui/material";
+import { Button, Card, CircularProgress, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {Course} from "./Courses";
 import {AddCourse} from "./AddCourse";
+import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 function Coursei(){
     let {courseId} = useParams();
-    const [courses, setCourses] = useState([]);
+    console.log("main course");
+    const setCourses = useSetRecoilState(coursesState);
     useEffect(()=>{
         
         function cb2(data){
@@ -24,28 +26,12 @@ function Coursei(){
         }).then(cb)
     }, [])
 
-    let course;
-    for(let i =0;i<courses.length;i++){
-        if(courses[i].id == courseId){
-            course = courses[i];
 
-        }
-    }
-
-    if(!course){
-        return (
-            <div>
-               Loading ...
-               <br /><br />
-                <CircularProgress />
-            </div>
-        )
-    }
 
     return (
         <div>
-            <Course course={course}/>
-            <UpdateCard course={course} setCourses={setCourses} courses={courses} />
+            <CourseCard courseId={courseId} />
+            <UpdateCard courseId={courseId} />
         </div>
     )
 }
@@ -54,8 +40,22 @@ function UpdateCard (props){
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [image, setImage] = useState("");
-        
-      
+    const [courses, setCourses] = useRecoilState(coursesState);
+    let course = null;
+    for(let i =0;i< courses.length;i++){
+        if(courses[i].id == props.courseId){
+            course = courses[i]
+        }
+    }
+    if(!course){
+        return (
+            <div>
+                <CircularProgress>Loading..</CircularProgress>
+            </div>
+        )
+    }
+      console.log("update card render");
+
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Card variant="outlined" style={{ width: "400", padding: 20 }}>
@@ -92,26 +92,26 @@ function UpdateCard (props){
                   function cb2(data) {
                     alert("course updated");
                     let updatedCourses = [];
-                    for(let i =0; i<props.courses.length;i++ ){
-                        if(props.courses[i].id == props.course.id){
+                    for(let i =0; i<courses.length;i++ ){
+                        if(courses[i].id == props.courseId){
                             updatedCourses.push( {
-                                id: props.course.id,
+                                id: props.courseId,
                                 title: title,
                                 description: description,
                                 imageLink: image
                             })
                         } else {
-                            updatedCourses.push(props.courses[i]);
+                            updatedCourses.push(courses[i]);
                         }
                     }
-                    props.setCourses(updatedCourses);
+                    setCourses(updatedCourses);
                     console.log(data);
                   }
       
                   function cb(res) {
                     res.json().then(cb2);
                   }
-                  fetch("http://localhost:3000/admin/courses/"+ props.course.id, {
+                  fetch("http://localhost:3000/admin/courses/"+ props.courseId, {
                     method: "PUT",
                     body: JSON.stringify({
                       title,
@@ -141,4 +141,49 @@ function UpdateCard (props){
         // </Card>
 
 }
+
+function CourseCard (props){
+    const courses = useRecoilValue(coursesState);
+    let course = null;
+    for(let i =0;i< courses.length;i++){
+        if(courses[i].id == props.courseId){
+            course = courses[i]
+        }
+    }
+
+    if(!course){
+        return (
+            <div>
+               < CircularProgress />
+            </div>
+        )
+    }
+    console.log("coursecard render")
+    return (
+        <div style={{display: "flex", justifyContent: "center"}}>
+            <Card style= {{
+                margin:10,
+                width: 300,
+                minHeight: 200
+            }}>
+                <Typography textAlign={"center"} variant="h5">
+                    {course.title}
+                </Typography>
+                
+                <Typography textAlign={"center"} variant="subtitle1">
+                    {course.description}
+                </Typography>
+                <img src={course.imageLink} alt="" />
+                
+            </Card>
+
+        </div>
+    )
+}
+
 export default Coursei;
+
+const coursesState = atom({
+    key: 'coursesState',
+    default: ''
+})
