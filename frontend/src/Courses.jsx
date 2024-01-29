@@ -1,4 +1,4 @@
-import { Card, Typography } from "@mui/material";
+import { Button, Card, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 function Courses(){
@@ -13,7 +13,7 @@ function Courses(){
         function cb(res){
             res.json().then(cb2);
         }
-        fetch ("http://localhost:3000/admin/courses", {
+        fetch ("http://localhost:3005/admin/courses", {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("token")
@@ -21,6 +21,7 @@ function Courses(){
         }).then(cb)
     }, [])
 
+    
     return (
         <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
             Courses
@@ -31,8 +32,8 @@ function Courses(){
     )
 }
 
-export function Course (props){
-
+export function Course ({course}){
+    // const navigate = useNavigate();
     return (
         <Card style={{
             border: "2px solid black",
@@ -41,9 +42,13 @@ export function Course (props){
             minHeight: 200 
 
         }}>
-           <Typography textAlign={"center"} variant="h5"> {props.course.title} </Typography>
-           <Typography textAlign={"center"} variant="subtitle1"> {props.course.description}</Typography>
-            <img src={props.course.imageLink} style={{width: 300}} alt="" />
+           <Typography textAlign={"center"} variant="h5"> {course.title} </Typography>
+           <Typography textAlign={"center"} variant="subtitle1"> {course.description}</Typography>
+            <img src={course.imageLink} style={{width: 300}} alt="" />
+            <Button variant="contained" size="large" onClick={()=>{
+                // navigate("/course/"+ course._id)
+                console.log("12");
+            }}>Edit</Button>
             </Card>
     )
 }

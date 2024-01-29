@@ -1,6 +1,6 @@
 import { Typography, Button, TextField, Card } from "@mui/material";
 import { useState } from "react";
-
+import axios from "axios";
 function Register() {
 
     const [email, setEmail] = useState("");
@@ -40,26 +40,17 @@ function Register() {
           <br />
           <Button 
           variant="contained"
-          onClick={()=>{
+          onClick={ async ()=>{
 
-            function cb2(data){
-                localStorage.setItem("token", data.token);
-                console.log(data);
-            }
+          
 
-            function cb (res){
-                res.json().then(cb2);
-            }
-            fetch("http://localhost:3000/admin/signup", {
-                method: "POST",
-                body: JSON.stringify({
-                    username: email,
-                    password: password
-                }),
-                headers: {
-                    "Content-type": "application/json"
-                }
-            }).then(cb)
+           const response = await axios.post("http://localhost:3005/admin/signup", {
+              username: email,
+              password: password
+            });
+            const data = response.data;
+            localStorage.setItem("token", data.token );
+            
           }}
           >Register</Button>
         </Card>
