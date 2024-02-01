@@ -1,14 +1,15 @@
-const {User, Course, Admin} = require("../db");
-const jwt = require('jsonwebtoken');
-const {SECRET} = require("../middlewares/auth");
-const {authenticateJwt} = require("../middlewares/auth");
-const express = require('express');
+import { User, Course, Admin } from "../db/index.js";
+import jwt from 'jsonwebtoken';
+import { SECRET, authenticateJwt } from "../middlewares/auth.js";
+import express from 'express';
+
 
 
 const router = express.Router();
 
 router.get("/me", authenticateJwt, async (req, res)=>{
-    const admin = await Admin.findOne({username: req.user.username});
+  const userId = req.headers["userId"];
+    const admin = await Admin.findOne({username: userId});
 
     if(!admin){
       res.status(403).json({
@@ -79,4 +80,4 @@ router.post('/signup', (req, res) => {
     res.json({course});
   })
 
-  module.exports = router;
+  export default router;

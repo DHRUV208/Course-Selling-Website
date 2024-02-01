@@ -1,8 +1,9 @@
-const {User, Course, Admin} = require("../db");
-const jwt = require('jsonwebtoken');
-const {SECRET} = require("../middlewares/auth");
-const {authenticateJwt} = require("../middlewares/auth");
-const express = require("express");
+import { User, Course, Admin } from "../db/index.js";
+import jwt from 'jsonwebtoken';
+import { SECRET } from "../middlewares/auth.js";
+import { authenticateJwt } from "../middlewares/auth.js";
+import express from "express";
+
 
 
 const router = express.Router();
@@ -71,4 +72,4 @@ router.post('/signup', async (req, res) => {
     }
   });
 
-  module.exports = router;
+export default router;
