@@ -9,6 +9,7 @@ Admin login/signup, User Login/Signup
 Admin can create course, edit course, delete a course
 User can enroll in a course
 Tech Stack Used - Typescript, React, Nodejs, Expressjs, Mongodb
+Used Recoil as state management library in React
 ```
 
 ## Installation
