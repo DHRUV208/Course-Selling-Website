@@ -1,31 +1,33 @@
-import { RecoilRoot, useSetRecoilState } from "recoil";
-import AddCourse from "./components/AddCourse";
-import AppBar from "./components/AppBar";
-import Course from "./components/Course";
-import Courses from "./components/Courses";
-import Register from "./components/Register";
-import Login from "./components/login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Signin from "./components/Signin.jsx";
+import Signup from "./components/Signup.jsx";
+import Appbar from "./components/Appbar.jsx";
+import AddCourse from "./components/AddCourse.jsx";
+import Courses from "./components/Courses";
+import Course from "./components/Course";
+import { Landing } from "./components/Landing.jsx";
+import { userState } from "./store/atoms/user.js";
+import { RecoilRoot, useSetRecoilState } from "recoil";
 import axios from "axios";
-import { useEffect } from "react";
-import { userState } from "./store/atoms/user";
 import { BASE_URL } from "./config.js";
+import { useEffect } from "react";
+
 function App() {
   return (
     <RecoilRoot>
       <div
-        style={{ width: "100vw", height: "100vh", backgroundColor: "#eeeee" }}
+        style={{ width: "100vw", height: "100vh", backgroundColor: "#eeeeee" }}
       >
         <Router>
-          <AppBar />
+          <Appbar />
           <InitUser />
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/course/:courseId" element={<Course />} />
-            <Route path="/addcourse" element={<AddCourse />} />
-            <Route path="/register" element={<Register />} />
-            {/* <Route path="/" element={<Landing />} /> */}
+            <Route path={"/addcourse"} element={<AddCourse />} />
+            <Route path={"/course/:courseId"} element={<Course />} />
+            <Route path={"/courses"} element={<Courses />} />
+            <Route path={"/signin"} element={<Signin />} />
+            <Route path={"/signup"} element={<Signup />} />
+            <Route path={"/"} element={<Landing />} />
           </Routes>
         </Router>
       </div>
@@ -35,7 +37,6 @@ function App() {
 
 function InitUser() {
   const setUser = useSetRecoilState(userState);
-
   const init = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/admin/me`, {
@@ -55,18 +56,19 @@ function InitUser() {
           userEmail: null,
         });
       }
-    } catch (err) {
+    } catch (e) {
       setUser({
         isLoading: false,
         userEmail: null,
       });
     }
   };
+
   useEffect(() => {
     init();
   }, []);
 
-  return <></>
+  return <></>;
 }
 
 export default App;

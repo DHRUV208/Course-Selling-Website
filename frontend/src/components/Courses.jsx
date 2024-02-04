@@ -1,56 +1,68 @@
 import { Button, Card, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../config.js";
+import axios from "axios";
 
-function Courses(){
+function Courses() {
+  const [courses, setCourses] = useState([]);
 
-    const [courses, setCourses] = useState([]);
-    useEffect(()=>{
-        
-        function cb2(data){
-            setCourses(data.courses);
-        }
+  const init = async () => {
+    const response = await axios.get(`${BASE_URL}/admin/courses/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    setCourses(response.data.courses);
+  };
 
-        function cb(res){
-            res.json().then(cb2);
-        }
-        fetch ("http://localhost:3005/admin/courses", {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + localStorage.getItem("token")
-            }
-        }).then(cb)
-    }, [])
+  useEffect(() => {
+    init();
+  }, []);
 
-    
-    return (
-        <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-            Courses
-            {courses.map((course)=>{
-              return  <Course course={course}/>
-            })}
-        </div>
-    )
+  return (
+    <div
+      style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+    >
+      {courses.map((course) => {
+        return <Course course={course} />;
+      })}
+    </div>
+  );
 }
 
-export function Course ({course}){
-    // const navigate = useNavigate();
-    return (
-        <Card style={{
-            border: "2px solid black",
-            margin: 10,
-            width:300,
-            minHeight: 200 
+export function Course({ course }) {
+  const navigate = useNavigate();
 
-        }}>
-           <Typography textAlign={"center"} variant="h5"> {course.title} </Typography>
-           <Typography textAlign={"center"} variant="subtitle1"> {course.description}</Typography>
-            <img src={course.imageLink} style={{width: 300}} alt="" />
-            <Button variant="contained" size="large" onClick={()=>{
-                // navigate("/course/"+ course._id)
-                console.log("12");
-            }}>Edit</Button>
-            </Card>
-    )
+  return (
+    <Card
+      style={{
+        margin: 10,
+        width: 300,
+        minHeight: 200,
+        padding: 20,
+      }}
+    >
+      <Typography textAlign={"center"} variant="h5">
+        {course.title}
+      </Typography>
+      <Typography textAlign={"center"} variant="subtitle1">
+        {course.description}
+      </Typography>
+      <img src={course.imageLink} style={{ width: 300 }}></img>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: 20 }}>
+        <Button
+          variant="contained"
+          size="large"
+          onClick={() => {
+            navigate("/course/" + course._id);
+          }}
+        >
+          Edit
+        </Button>
+      </div>
+    </Card>
+  );
 }
 
 export default Courses;

@@ -1,38 +1,21 @@
-import { Typography, Button, CircularProgress } from "@mui/material";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Typography } from "@mui/material";
+import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isUserLoading } from "../store/selectors/isUserLoading";
+import { useSetRecoilState, useRecoilValue } from "recoil";
+import { userState } from "../store/atoms/user.js";
 import { userEmailState } from "../store/selectors/userEmail";
-import { userState } from "../store/atoms/user";
 
-function AppBar() {
+function Appbar({}) {
   const navigate = useNavigate();
   const userLoading = useRecoilValue(isUserLoading);
   const userEmail = useRecoilValue(userEmailState);
   const setUser = useSetRecoilState(userState);
 
-  if(userLoading){
-    return <>
-      <CircularProgress />
-      </>
+  if (userLoading) {
+    return <></>;
   }
-  // const init = async () => {
-  //   const response = await axios.get(`${BASE_URL}/admin/me`, {
-  //     headers: {
-  //       Authorization: "Bearer " + localStorage.getItem("token"),
-  //     },
-  //   });
 
-  //   if (response.data.username) {
-  //     setUseremail(response.data.username);
-  //   }
-  // };
-  // useEffect(() => {
-  //   init();
-  // }, []);
-  // console.log("useremail", useremail);
   if (userEmail) {
     return (
       <div
@@ -43,28 +26,29 @@ function AppBar() {
           zIndex: 1,
         }}
       >
-        <div style={{ marginLeft: 10, cursor: "pointer" }} onClick={()=>{ navigate("/")}}>
-          <Typography variant={"h6"}>Udemy</Typography>
-        </div>
         <div
-          style={{
-            display: "flex",
+          style={{ marginLeft: 10, cursor: "pointer" }}
+          onClick={() => {
+            navigate("/");
           }}
         >
+          <Typography variant={"h6"}>Coursera</Typography>
+        </div>
+
+        <div style={{ display: "flex" }}>
           <div style={{ marginRight: 10, display: "flex" }}>
             <div style={{ marginRight: 10 }}>
               <Button
-                
                 onClick={() => {
                   navigate("/addcourse");
                 }}
               >
-                Add Course
+                Add course
               </Button>
             </div>
+
             <div style={{ marginRight: 10 }}>
               <Button
-                
                 onClick={() => {
                   navigate("/courses");
                 }}
@@ -72,14 +56,15 @@ function AppBar() {
                 Courses
               </Button>
             </div>
+
             <Button
               variant={"contained"}
               onClick={() => {
                 localStorage.setItem("token", null);
                 setUser({
                   isLoading: false,
-                  userEmail: null
-                })
+                  userEmail: null,
+                });
               }}
             >
               Logout
@@ -98,8 +83,13 @@ function AppBar() {
           zIndex: 1,
         }}
       >
-        <div style={{ marginLeft: 10, cursor: "pointer" }} onClick={()=>{navigate("/")}}>
-          <Typography variant={"h6"}>Udemy</Typography>
+        <div
+          style={{ marginLeft: 10, cursor: "pointer" }}
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          <Typography variant={"h6"}>Coursera</Typography>
         </div>
 
         <div style={{ display: "flex" }}>
@@ -107,20 +97,20 @@ function AppBar() {
             <Button
               variant={"contained"}
               onClick={() => {
-                navigate("/register");
+                navigate("/signup");
               }}
             >
-              Register
+              Signup
             </Button>
           </div>
           <div>
             <Button
               variant={"contained"}
               onClick={() => {
-                navigate("/login");
+                navigate("/signin");
               }}
             >
-              Login
+              Signin
             </Button>
           </div>
         </div>
@@ -129,4 +119,4 @@ function AppBar() {
   }
 }
 
-export default AppBar;
+export default Appbar;
